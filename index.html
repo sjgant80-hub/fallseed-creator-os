@@ -151,22 +151,19 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1300px;margin:0 auto;width
     'llama-3b':  { id: 'Llama-3.2-3B-Instruct-q4f16_1-MLC',   size: '~2GB',   label: '3B · balanced · default · most laptops' },
     'qwen-7b':   { id: 'Qwen2.5-7B-Instruct-q4f16_1-MLC',     size: '~5GB',   label: '7B · capable · needs decent GPU (M-series Mac / 8GB+ VRAM)' },
     'llama-8b':  { id: 'Llama-3.1-8B-Instruct-q4f16_1-MLC',   size: '~5GB',   label: '8B · common · needs decent GPU' },
-    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' },
-  };
+    'llama-70b': { id: 'Llama-3.1-70B-Instruct-q4f16_1-MLC',  size: '~40GB',  label: '70B · frontier · needs serious GPU + 64GB+ RAM' }};
   const DEFAULT_MODEL = 'llama-3b';
 
   const T3_PROVIDERS = {
     anthropic: { label: 'Anthropic Claude', models: ['claude-sonnet-4-5','claude-opus-4-7','claude-haiku-4-5'], default: 'claude-sonnet-4-5', url: 'https://api.anthropic.com/v1/messages' },
     openai:    { label: 'OpenAI',           models: ['gpt-4o','gpt-4o-mini','o1-mini'],                          default: 'gpt-4o-mini',      url: 'https://api.openai.com/v1/chat/completions' },
-    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' },
-  };
+    google:    { label: 'Google Gemini',    models: ['gemini-1.5-pro','gemini-1.5-flash','gemini-2.0-flash-exp'], default: 'gemini-1.5-flash', url: 'https://generativelanguage.googleapis.com/v1beta/models/' }};
 
   // ─── State ───────────────────────────────────────────────────────
   const STATE = {
     config: loadConfig(),
     ai: { ready: false, loading: false, progress: 0, engine: null, model: null },
-    mesh: { active: false, peers: new Map(), bc: null, signal: null },
-  };
+    mesh: { active: false, peers: new Map(), bc: null, signal: null }};
 
   function loadConfig() {
     try { return JSON.parse(localStorage.getItem('fall-kit.config') || '{}'); }
@@ -233,8 +230,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1300px;margin:0 auto;width
     if (tier === 'T2' && STATE.ai.ready && STATE.ai.engine) {
       const r = await STATE.ai.engine.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: userMsg }],
-        max_tokens: maxTokens,
-      });
+        max_tokens: maxTokens});
       return r.choices[0].message.content;
     }
     if (tier === 'T3' && STATE.config.api_key && STATE.config.api_provider) {
@@ -251,8 +247,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1300px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.anthropic.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, system: sys, messages: [{ role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('Anthropic ' + r.status + ': ' + (await r.text()).slice(0, 200));
       const j = await r.json();
       return j.content[0].text;
@@ -261,8 +256,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1300px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.openai.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] }),
-      });
+        body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'system', content: sys }, { role: 'user', content: msg }] })});
       if (!r.ok) throw new Error('OpenAI ' + r.status);
       const j = await r.json();
       return j.choices[0].message.content;
@@ -271,8 +265,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1300px;margin:0 auto;width
       const r = await fetch(T3_PROVIDERS.google.url + model + ':generateContent?key=' + encodeURIComponent(key), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } }),
-      });
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: sys + '\n\n---\n\n' + msg }] }], generationConfig: { maxOutputTokens: maxTokens } })});
       if (!r.ok) throw new Error('Google ' + r.status);
       const j = await r.json();
       return j.candidates[0].content.parts[0].text;
@@ -513,8 +506,7 @@ main{padding:24px 32px 80px;overflow-y:auto;max-width:1300px;margin:0 auto;width
     openMint: openMint,  // v1.2 · launch kcc-mint with this seed prefilled as parent
     MODELS: WEBLLM_MODELS,
     PROVIDERS: T3_PROVIDERS,
-    state: STATE,
-  };
+    state: STATE};
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -578,22 +570,19 @@ const SEED_DEFAULT = {
         { title: 'Daily creation habit (5 days/week)', category: 'habit' },
         { title: 'Grow audience to Y by Z date', category: 'reach' },
         { title: 'Develop a signature voice / style', category: 'craft' },
-        { title: 'Open a paid revenue stream from creation', category: 'monetise' },
-      ],
+        { title: 'Open a paid revenue stream from creation', category: 'monetise' }],
       routineTemplates: [
         { title: 'Morning creation block · 90 min', cadence: 'daily' },
         { title: 'Weekly publish · pick one to ship', cadence: 'weekly' },
         { title: 'Friday reflection · what shipped, what did not', cadence: 'weekly' },
-        { title: 'Monthly portfolio review', cadence: 'monthly' },
-      ],
+        { title: 'Monthly portfolio review', cadence: 'monthly' }],
       journalPrompts: ['What did I make today (no judgement, just inventory)?', 'Where did the resistance show up?', 'What is the one thing that should ship this week?'],
       knowledgeCategories: ['inspiration', 'tooling', 'craft notes', 'process', 'audience'],
       agentTasks: [
         'Summarise this week\'s outputs into a thread / email',
         'Pull yesterday\'s notes into a creation brief for today',
         'Critique my latest draft against my voice notes',
-        'Suggest 3 follow-on pieces from this published work',
-      ],
+        'Suggest 3 follow-on pieces from this published work'],
       dashboardWidgets: ['shipped this week', 'creation streak (days)', 'WIP count', 'top inspiration sources']
     },
     investor: {
@@ -604,22 +593,19 @@ const SEED_DEFAULT = {
         { title: 'Achieve X% annualised return over rolling 3y', category: 'return' },
         { title: 'Build N months emergency reserve', category: 'reserve' },
         { title: 'Reduce single-asset concentration below X%', category: 'risk' },
-        { title: 'Document every position thesis before adding', category: 'discipline' },
-      ],
+        { title: 'Document every position thesis before adding', category: 'discipline' }],
       routineTemplates: [
         { title: 'Weekly position review · 30 min', cadence: 'weekly' },
         { title: 'Monthly rebalance check', cadence: 'monthly' },
         { title: 'Quarterly thesis audit · what held, what broke', cadence: 'monthly' },
-        { title: 'Annual tax-loss harvest pass', cadence: 'monthly' },
-      ],
+        { title: 'Annual tax-loss harvest pass', cadence: 'monthly' }],
       journalPrompts: ['What position did I open / close this week? Why?', 'Where did my thesis play out, and where was I wrong?', 'What is the one risk I am underestimating right now?'],
       knowledgeCategories: ['thesis library', 'positions', 'risk notes', 'tax', 'reading'],
       agentTasks: [
         'Summarise this week\'s market context against my open theses',
         'Stress-test current allocation against a 30% drawdown',
         'Pull together a tax-loss-harvest candidates list',
-        'Draft a one-page memo for [position]',
-      ],
+        'Draft a one-page memo for [position]'],
       dashboardWidgets: ['allocation drift', 'YTD return vs benchmark', 'positions opened/closed (30d)', 'cash runway months']
     },
     researcher: {
@@ -630,22 +616,19 @@ const SEED_DEFAULT = {
         { title: 'Maintain a Zettelkasten of N+ atomic notes', category: 'synthesis' },
         { title: 'Ship 1 written synthesis per month', category: 'output' },
         { title: 'Build literature map for [topic]', category: 'depth' },
-        { title: 'Replicate one finding per quarter', category: 'rigour' },
-      ],
+        { title: 'Replicate one finding per quarter', category: 'rigour' }],
       routineTemplates: [
         { title: 'Morning deep-read · 60 min · no distractions', cadence: 'daily' },
         { title: 'Weekly synthesis · turn notes into one paragraph', cadence: 'weekly' },
         { title: 'Monthly literature scan · what is new', cadence: 'monthly' },
-        { title: 'Quarterly thesis review · what do I now believe', cadence: 'monthly' },
-      ],
+        { title: 'Quarterly thesis review · what do I now believe', cadence: 'monthly' }],
       journalPrompts: ['What did today\'s reading change?', 'What question is sharpening?', 'What is the next paper or thread to pull?'],
       knowledgeCategories: ['papers', 'atomic notes', 'questions', 'syntheses', 'replications'],
       agentTasks: [
         'Summarise this paper into 5 claims + 5 caveats',
         'Find related work to [topic / paper]',
         'Draft a literature-map prompt for [field]',
-        'Adversarially critique my latest synthesis',
-      ],
+        'Adversarially critique my latest synthesis'],
       dashboardWidgets: ['papers read this month', 'open questions', 'syntheses shipped', 'top-cited authors in notes']
     },
     writer: {
@@ -656,22 +639,19 @@ const SEED_DEFAULT = {
         { title: 'Write 1,000 words/day, 5 days/week', category: 'volume' },
         { title: 'Grow subscriber list to N', category: 'audience' },
         { title: 'Finish [project] draft by Z date', category: 'project' },
-        { title: 'Develop signature voice (audit quarterly)', category: 'craft' },
-      ],
+        { title: 'Develop signature voice (audit quarterly)', category: 'craft' }],
       routineTemplates: [
         { title: 'Morning pages · 30 min · stream of consciousness', cadence: 'daily' },
         { title: 'Daily 1,000-word block', cadence: 'daily' },
         { title: 'Weekly publish · pick one to ship', cadence: 'weekly' },
-        { title: 'Monthly subscriber note', cadence: 'monthly' },
-      ],
+        { title: 'Monthly subscriber note', cadence: 'monthly' }],
       journalPrompts: ['What did I write today (count + topic)?', 'Where did the sentence break down?', 'What does my voice sound like right now?'],
       knowledgeCategories: ['drafts', 'fragments', 'inspiration', 'voice notes', 'reader replies'],
       agentTasks: [
         'Tighten this paragraph without losing meaning',
         'Draft 3 alternative openings for [piece]',
         'Pull 5 quotes I marked this week into a thread',
-        'Critique my voice consistency across these 3 pieces',
-      ],
+        'Critique my voice consistency across these 3 pieces'],
       dashboardWidgets: ['words this week', 'pieces shipped', 'subscriber count', 'draft pipeline']
     },
     nomad: {
@@ -682,22 +662,19 @@ const SEED_DEFAULT = {
         { title: 'Maintain remote-work capability from any base', category: 'capability' },
         { title: 'Keep monthly burn under $X', category: 'finance' },
         { title: 'Document each base in a one-page note', category: 'memory' },
-        { title: 'Build a network of N+ local contacts globally', category: 'network' },
-      ],
+        { title: 'Build a network of N+ local contacts globally', category: 'network' }],
       routineTemplates: [
         { title: 'Weekly admin sweep · visas, tax, banks · 1 hr', cadence: 'weekly' },
         { title: 'Monthly burn review', cadence: 'monthly' },
         { title: 'Quarterly base rotation review · where next', cadence: 'monthly' },
-        { title: 'Annual residency / tax check', cadence: 'monthly' },
-      ],
+        { title: 'Annual residency / tax check', cadence: 'monthly' }],
       journalPrompts: ['What worked / failed about this base?', 'What did I see / learn this week?', 'What is the next move (place + reason)?'],
       knowledgeCategories: ['bases', 'contacts', 'tax notes', 'gear', 'visa status'],
       agentTasks: [
         'Compile a one-page note for [city]',
         'Compare tax implications of bases X vs Y',
         'Draft a 30-day plan for [base]',
-        'Pull together this month\'s receipts into a category report',
-      ],
+        'Pull together this month\'s receipts into a category report'],
       dashboardWidgets: ['days at current base', 'monthly burn vs budget', 'visa expiry next', 'bases this year']
     },
     monk: {
@@ -708,22 +685,19 @@ const SEED_DEFAULT = {
         { title: 'Reduce digital surface (apps / accounts / subscriptions)', category: 'reduction' },
         { title: 'Sleep 8 hours, asleep by 22:30', category: 'rest' },
         { title: 'Read 12 books this year (deep, not many)', category: 'depth' },
-        { title: 'Practice one silence-day per month', category: 'silence' },
-      ],
+        { title: 'Practice one silence-day per month', category: 'silence' }],
       routineTemplates: [
         { title: 'Morning sit · 20+ min · before screens', cadence: 'daily' },
         { title: 'Evening offline · no screens after 21:00', cadence: 'daily' },
         { title: 'Weekly digital declutter · unsubscribe / delete', cadence: 'weekly' },
-        { title: 'Monthly silence day', cadence: 'monthly' },
-      ],
+        { title: 'Monthly silence day', cadence: 'monthly' }],
       journalPrompts: ['What did I notice today that I would normally miss?', 'What did I add that I could have not added?', 'What stayed quiet?'],
       knowledgeCategories: ['practice notes', 'readings', 'subtractions', 'rest data', 'questions'],
       agentTasks: [
         'Suggest 5 things in my notes I could delete',
         'Pull this week\'s sit notes into a single paragraph',
         'Find passages from my readings on [theme]',
-        'Audit my apps / subscriptions and propose 3 to drop',
-      ],
+        'Audit my apps / subscriptions and propose 3 to drop'],
       dashboardWidgets: ['meditation streak (days)', 'sleep average (7-day)', 'subtractions this month', 'silence days completed']
     }
   },
@@ -760,7 +734,7 @@ const PROVIDERS = [
   { id:'openrouter-free', name:'OpenRouter free', tier:'T3-free', tierLabel:'free', priority:5, endpoint:'https://openrouter.ai/api/v1/chat/completions', model:'meta-llama/llama-3.3-70b-instruct:free', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://openrouter.ai/keys', note:'Free: Llama 3.3 70B, Gemini 2.0 Flash, Mistral · 200 req/day' },
   { id:'google', name:'Google AI Studio', tier:'T3-free', tierLabel:'free', priority:6, endpoint:'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent', model:'gemini-2.5-flash', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://aistudio.google.com/apikey', note:'Gemini 2.5 Flash free · 15 req/min · 1M tokens/day free' },
   { id:'cerebras', name:'Cerebras', tier:'T3-free', tierLabel:'free', priority:7, endpoint:'https://api.cerebras.ai/v1/chat/completions', model:'llama-3.3-70b', requiresKey:true, freeTier:true, defaultEnabled:true, supportsStream:true, pricePer1MIn:0, pricePer1MOut:0, signupUrl:'https://cloud.cerebras.ai/platform', note:'Llama 3.3 70B at ~2200 tokens/sec · generous free tier' },
-  { id:'anthropic', name:'Anthropic (paid)', tier:'T3-paid', tierLabel:'paid', priority:8, endpoint:'https://api.anthropic.com/v1/messages', model:'claude-sonnet-4-20250514', requiresKey:true, paid:true, defaultEnabled:false, supportsStream:true, pricePer1MIn:3, pricePer1MOut:15, signupUrl:'https://console.anthropic.com/', note:'Sonnet 4: ~£0.03/tool · highest quality codegen' }
+  { id:'anthropic', name:'Anthropic (paid)', tier:'T3-paid', tierLabel:'paid', priority:8, endpoint:'https://api.anthropic.com/v1/messages', model:'claude-sonnet-4-20250514', requiresKey:true, paid:true, defaultEnabled:false, supportsStream:true, pricePer1MIn:3, pricePer1MOut:15, signupUrl:'https://console.anthropic.com/', note:'Sonnet 4: ~TBA/tool · highest quality codegen' }
 ];
 
 const TABS = [
@@ -1376,8 +1350,7 @@ function renderBuild(main) {
     `Add a "${p.name === 'Investor' ? 'portfolio rebalance' : p.name === 'Researcher' ? 'paper-summary' : 'progress-review'}" tool for this persona.`,
     `Generate 5 more goal templates for the ${p.name} persona, each with a clear measurable outcome.`,
     `Generate a custom persona "Founder" with goalTemplates, routineTemplates, journalPrompts, knowledgeCategories, agentTasks. Output as JSON matching the existing personas schema.`,
-    `Suggest a weekly review template tailored for the ${p.name} persona.`,
-  ];
+    `Suggest a weekly review template tailored for the ${p.name} persona.`];
   main.innerHTML = `
     <div class="section-h"><h2>Build</h2><div class="sub">cascade across enabled providers</div></div>
     <div class="card">
