@@ -37,7 +37,7 @@ Welcome · Personas · Goals · Routines · Journal · Knowledge · Agents · Da
 
 ## Cosmology
 
-Prime **1213**, spine-clean mod 127 = 70 = 2·5·7. Seed level **2**. Mesh channel **`fall-creator`**. Root seed (parent: null). Seal **◊·κ=1**.
+Prime **1213**, spine-clean mod 127 = 70 = 2·5·7. Seed level **2**. Mesh channel **`fall-creator`**. Root seed (parent: null). Seal ****.
 
 ## Disclaimer
 
